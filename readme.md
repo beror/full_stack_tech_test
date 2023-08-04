@@ -56,8 +56,8 @@ the /users/:id should:
 
 The task would be to refactor those files, improving the error handling, making it more efficient, removing duplicated code, validating incoming data more thoroughly, and modernizing it by converting it to TypeScript.
 
-[x] File 'api/clean_me.js'
-[x] File 'web/pages/clean_me.js' 
+- File `api/clean_me.js`
+- File `web/pages/clean_me.js`
 
 **Submission:**
 
