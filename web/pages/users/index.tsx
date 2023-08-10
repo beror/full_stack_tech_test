@@ -45,6 +45,15 @@ const UsersPage = () => {
         onSubmit: createUser,
     });
 
+    const createUserHandler = () => {
+        createUser({
+            name: formik.values.name,
+            email: formik.values.email,
+            avatar: formik.values.avatar,
+        })
+        formik.resetForm();
+    }
+
     if(error){
         return (
             <div className="h-screen flex items-center justify-center">
@@ -141,8 +150,8 @@ const UsersPage = () => {
                                     label="Name"
                                     placeholder="Enter your name"
                                 />
-                                {formik.touched.email && formik.errors.email && (
-                                    <div style={{ color: 'red' }}>{formik.errors.email}</div>
+                                {formik.touched.name && formik.errors.name && (
+                                    <div style={{ color: 'red' }}>{formik.errors.name}</div>
                                 )}
 
                                 <Input
@@ -173,7 +182,10 @@ const UsersPage = () => {
                                 <Button color="danger" variant="light" onClick={onClose}>
                                     Close
                                 </Button>
-                                <Button type='submit' color="primary">
+                                <Button onClick={() => {
+                                    onClose();
+                                    createUserHandler();
+                                }} type='submit' color="primary">
                                     Submit
                                 </Button>
                             </ModalFooter>
