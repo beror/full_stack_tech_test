@@ -8,21 +8,19 @@ export default function MessyPage() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    setIsLoading(true);
     getData()
-        .catch((error) => setError(error));
+        .then(setData)
+        .catch((error) => setError(error))
+        .finally(() => setIsLoading(false))
   }, []);
 
   async function getData() {
     try {
-        setIsLoading(true);
-        const data = await fetch('https://jsonplaceholder.typicode.com/posts')
+        return await fetch('https://jsonplaceholder.typicode.com/posts')
             .then(res => res.json())
-        setData(data);
     } catch (error) {
-        //We can custom our error here
-        throw new Error('Something going wrong')
-    } finally {
-        setIsLoading(false);
+        throw new Error('Cannot fetch data')
     }
   }
 
