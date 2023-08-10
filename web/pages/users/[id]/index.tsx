@@ -4,11 +4,13 @@ import {useGetUserByIdQuery} from "@/services/users/users";
 import {useRouter} from "next/router";
 import {Card} from "@nextui-org/card";
 import {Avatar, CardBody, Skeleton} from "@nextui-org/react";
+import { GetServerSideProps } from 'next';
 
 const UserPage = () => {
     const router = useRouter()
-    const { id } = router.query
-    const { data, error, isLoading } = useGetUserByIdQuery(Number(id));
+    const id = router.query.id as string;
+
+    const { data, error, isLoading } = useGetUserByIdQuery(id);
 
     if(error){
         return (
