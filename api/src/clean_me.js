@@ -1,38 +1,27 @@
-import { Router, Request, Response } from 'express';
+import { Router } from 'express';
 const router = Router();
 
-
-let data = [
-  { id: 1, name: 'Entity1', properties: { propA: 'a', propB: 'b', propC: [1,2,3] } },
-  { id: 2, name: 'Entity2', properties: { propA: 'c', propB: 'd', propC: [4,5,6] } },
-  { id: 3, name: 'Entity3', properties: { propA: 'e', propB: 'f', propC: [7,8,9] } },
+const data = [
+  { id: 1, name: 'Entity1', properties: { propA: 'a', propB: 'b', propC: [1, 2, 3] } },
+  { id: 2, name: 'Entity2', properties: { propA: 'c', propB: 'd', propC: [4, 5, 6] } },
+  { id: 3, name: 'Entity3', properties: { propA: 'e', propB: 'f', propC: [7, 8, 9] } },
 ];
 
-// GET all entities
-router.get('/entities', function(req, res) {
-  if (req.query.filter) {
-    let filter = req.query.filter;
-    let filtered = [];
-    for (let i = 0; i < data.length; i++) {
-      if (data[i].name.includes(filter)) {
-        filtered.push(data[i]);
-      }
-    }
+router.get('/entities', (req, res) => {
+  const { filter } = req.query;
+  
+  if (filter) {
+    const filtered = data.filter(entity => entity.name.includes(filter));
     res.json(filtered);
   } else {
     res.json(data);
   }
 });
 
-// GET entity by ID
-router.get('/entities/:id', function(req, res) {
-  let id = req.params.id;
-  let entity;
-  for (let i = 0; i < data.length; i++) {
-    if (data[i].id == id) {
-      entity = data[i];
-    }
-  }
+router.get('/entities/:id', (req, res) => {
+  const id = req.params.id;
+  const entity = data.find(entity => entity.id == id);
+
   if (entity) {
     res.json(entity);
   } else {
@@ -40,11 +29,17 @@ router.get('/entities/:id', function(req, res) {
   }
 });
 
-// POST new entity
-router.post('/entities', function(req, res) {
-  let entity = req.body;
-  if (entity && entity.name && entity.properties && typeof entity.name === 'string' && typeof entity.properties === 'object') {
-    let id = data.length + 1;
+router.post('/entities', (req, res) => {
+  const entity = req.body;
+  
+  if (
+    entity &&
+    entity.name &&
+    entity.properties &&
+    typeof entity.name === 'string' &&
+    typeof entity.properties === 'object'
+  ) {
+    const id = data.length + 1;
     entity.id = id;
     data.push(entity);
     res.json(entity);
@@ -53,35 +48,25 @@ router.post('/entities', function(req, res) {
   }
 });
 
-// DELETE an entity
-router.delete('/entities/:id', function(req, res) {
-  let id = req.params.id;
-  let index;
-  for (let i = 0; i < data.length; i++) {
-    if (data[i].id == id) {
-      index = i;
-    }
-  }
-  if (index !== undefined) {
-    let deleted = data.splice(index, 1);
+router.delete('/entities/:id', (req, res) => {
+  const id = req.params.id;
+  const index = data.findIndex(entity => entity.id == id);
+
+  if (index !== -1) {
+    const deleted = data.splice(index, 1);
     res.json(deleted);
   } else {
     res.status(404).send('Not found');
   }
 });
 
-// PATCH an entity
-router.patch('/entities/:id', function(req, res) {
-  let id = req.params.id;
-  let update = req.body;
-  let entity;
-  for (let i = 0; i < data.length; i++) {
-    if (data[i].id == id) {
-      entity = data[i];
-    }
-  }
+router.patch('/entities/:id', (req, res) => {
+  const id = req.params.id;
+  const update = req.body;
+  const entity = data.find(entity => entity.id == id);
+
   if (entity) {
-    let updatedEntity = Object.assign(entity, update);
+    const updatedEntity = Object.assign(entity, update);
     res.json(updatedEntity);
   } else {
     res.status(404).send('Not found');
