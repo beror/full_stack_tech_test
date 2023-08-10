@@ -50,10 +50,10 @@ export const createUser =
     async (req: Request, res: Response) => {
         try {
             const newUser = req.body;
+            newUser.id = Date.now();
             const newStringifiedUser = JSON.stringify(req.body, null, 2);
-            const newUserId = Date.now();
 
-            await fs.writeFile(`data/users/${newUserId}.json`, newStringifiedUser);
+            await fs.writeFile(`data/users/${newUser.id}.json`, newStringifiedUser);
 
             res.status(200).json(newUser);
         } catch (error) {
